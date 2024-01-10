@@ -7,3 +7,8 @@
   height: 100lvh;
   overflow: hidden;
 }
+
+input{
+  outline: none;
+  resize: horizontal;
+}

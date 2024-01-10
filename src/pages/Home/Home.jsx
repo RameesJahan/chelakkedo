@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 
 const Home = () => {
   return (
@@ -10,7 +11,9 @@ const Home = () => {
       </div>
       <div className="container-sm w-full h-full flex flex-col justify-center items-center">
         <p className="text-white font-mono max-w-xs whitespace-break-spaces text-2xl"><span className="text-3xl text-fuchsia-500 font-bold">Dive Deep, Not Wide:</span><br />Textual Connections in a Noisy World</p>
-        <div className="px-4 py-2 mt-5 font-bold text-xl rounded-full rounded-bl-none bg-fuchsia-400 hover:bg-fuchsia-800 text-black">Let's Chat</div>
+        <Link to="/login">
+          <div className="px-4 py-2 mt-5 font-bold text-xl rounded-full rounded-bl-none bg-fuchsia-400 hover:bg-fuchsia-800 text-black">Let's Chat</div>
+        </Link>
       </div>
     </div>
   )
