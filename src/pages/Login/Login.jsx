@@ -1,7 +1,9 @@
-import React,{ useState } from "react";
+import React,{ useState, useEffect, useRef } from "react";
 import { countries, getEmojiFlag, getCountryCode } from "countries-list";
 
 import Selecter from "../../components/Selecter";
+
+import IMG_SUCCESS from "../../assets/images/success.png";
 
 const c_list = Object.keys(countries).map(element => {
     const item = {
@@ -94,6 +96,12 @@ const VerifyNumberUI = () => {
 
 const Login = () => {
   const [sentOTP, setSentOTP] = useState(false);
+  const [showDialog, setShowDialog] = useState(false);
+  const diaRef = useRef()
+  
+  useEffect(() => {
+    //diaRef.current?.showModal()
+  }, []);
   
   const handleOnVerify = () => {
     setSentOTP(false)
@@ -115,6 +123,12 @@ const Login = () => {
               </h4>
               {sentOTP?<VerifyNumberUI onVerify={handleOnVerify}/>:<GetNumberUI onGet={handleOnGet}/>}
           </div>
+          <dialog className="max-w-xs bg-slate-900" ref={diaRef}>
+            <div className="flex flex-col items-center p-8">
+              <img className="w-32 aspect-square" src={IMG_SUCCESS} alt="IMG_SUCCESS" />
+              <span className="text-center text-2xl font-bold text-green-500 mt-4">Login Success</span>
+            </div>
+          </dialog>
       </div>
   );
 };
