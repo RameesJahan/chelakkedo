@@ -114,7 +114,7 @@ const Login = () => {
   
   return (
       <div className="bg-slate-900 h-full p-5 flex flex-col items-center overflow-y-auto">
-          <h3 className="my-10 text-fuchsia-400 text-2xl font-extrabold font-mono text-center">
+          <h3 className="my-10 logo text-center">
               Chelakkedo
           </h3>
           <div className="w-full max-w-xs p-4 rounded border border-gray-400 flex flex-col items-center text-white">

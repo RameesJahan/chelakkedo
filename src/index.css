@@ -17,3 +17,13 @@ input{
   background: theme(colors.neutral.900);
   opacity: 0.7;
 }
+
+
+@layer components {
+  .logo{
+    @apply text-fuchsia-400 text-2xl font-extrabold font-mono;
+  }
+  .section{
+    @apply w-full h-full rounded border border-fuchsia-600 bg-neutral-900 shadow;
+  }
+}

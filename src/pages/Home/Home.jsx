@@ -5,7 +5,7 @@ const Home = () => {
     <div className="bg-slate-900 h-full p-5">
       <div className="topbar w-full">
         <div className="container-md flex justify-between p-1">
-          <h3 className="icon text-fuchsia-400 text-2xl font-extrabold font-mono self-center">Chelakkedo</h3>
+          <h3 className="logo self-center">Chelakkedo</h3>
           <div className="btn-abt border border-fuchsia-400 px-4 py-2 font-bold text-xl rounded-full rounded-bl-none text-fuchsia-400 hover:bg-fuchsia-400 hover:text-white">About</div>
         </div>
       </div>
