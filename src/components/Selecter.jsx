@@ -46,6 +46,7 @@ const Selecter = ({ className, data, onSelect, selected }) => {
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search Country..."/>
         </div>
+        {/* list of Countries*/}
         <ul className="max-h-60 overflow-y-auto *:p-2 *:border-b *:border-white hover:*:bg-fuchsia-800 ">
           { data.filter((item) => {
             return item.name.toLowerCase().includes(search.toLowerCase())

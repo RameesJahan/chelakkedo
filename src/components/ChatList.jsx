@@ -39,7 +39,7 @@ const ChatUserCard = ({user}) => {
   return (
     <div className="border-b border-gray-800 p-2 flex flex-nowrap items-center gap-2 text-white" >
       <div className="flex-none">
-        <div className={`flex w-12 aspect-square items-center justify-center font-mono text-4xl rounded-full ${color}`}>{user.name.toUpperCase()[0]}</div>
+        <div className={`avatar ${color}`}>{user.name.toUpperCase()[0]}</div>
       </div>
       <div className="grow overflow-x-hidden" >
         <h4 className="font-bold" >{user.name}</h4>

@@ -5,7 +5,11 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      backgroundImage: {
+        'chat-bg':"/public/images/chat_bg.jpg"
+      }
+    },
   },
   plugins: [],
 }
