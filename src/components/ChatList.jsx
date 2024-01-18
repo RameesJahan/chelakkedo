@@ -26,7 +26,7 @@ const colors = [
     "bg-sky-600","bg-blue-600","bg-indigo-600","bg-violet-600","bg-purple-600","bg-pink-600"
   ]
 
-const ChatUserCard = ({user}) => {
+const ChatUserCard = ({user, onClick, active }) => {
   
   const [color, setColor] = useState('');
   
@@ -37,7 +37,10 @@ const ChatUserCard = ({user}) => {
   
   
   return (
-    <div className="border-b border-gray-800 p-2 flex flex-nowrap items-center gap-2 text-white" >
+    <div 
+      className={`border-b border-gray-800 p-2 flex flex-nowrap items-center gap-2 text-white ${active&&"bg-stone-800"}`}
+      onClick={onClick}
+      >
       <div className="flex-none">
         <div className={`avatar ${color}`}>{user.name.toUpperCase()[0]}</div>
       </div>
@@ -52,7 +55,7 @@ const ChatUserCard = ({user}) => {
   )
 }
 
-const ChatList = () => {
+const ChatList = ({onClickChat,active}) => {
   const [search, setSearch] = useState('');
   const [users, setUsers] = useState(data);
   
@@ -70,7 +73,15 @@ const ChatList = () => {
           users.filter((user) => {
             return user.name.toLowerCase().includes(search.toLowerCase())
           })
-          .map((user) => <ChatUserCard key={user.id} user={user} />)
+          .map((user) => (
+            <div key={user.id} >
+               <ChatUserCard 
+                  active={user.id === active?true:false}
+                  user={user} 
+                  onClick={() => onClickChat(user.id)}
+               />
+            </div>
+          ))
         }
       </div>
     </div>

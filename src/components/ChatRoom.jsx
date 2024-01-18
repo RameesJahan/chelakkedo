@@ -3,6 +3,7 @@ import useTime from "../hooks/useTime";
 
 import { ImgSend, ImgArrowLeft } from "../assets/icons/svg";
 
+import data from './dummydata'
 const messages = [
     {
         sender: "user",
@@ -112,14 +113,14 @@ const sorted = messages.sort((a, b) => {
     return parseInt(b.time) - parseInt(a.time);
 });
 
-const TopBar = () => {
+const TopBar = ({ title, onBack }) => {
     return (
         <div className="p-2 flex gap-2 items-center border-b border-fuchsia-700">
-            <div>
+            <div onClick={onBack}>
                 <ImgArrowLeft />
             </div>
             <div className="avatar w-10 text-3xl bg-amber-500">A</div>
-            <div className="font-bold">Chat Title</div>
+            <div className="font-bold">{title}</div>
         </div>
     );
 };
@@ -206,20 +207,37 @@ const BottomBar = () => {
     );
 };
 
-const ChatRoom = () => {
-    return (
-        <div className="section text-white flex flex-col">
-            <div>
-                <TopBar />
-            </div>
-            <div className="grow overflow-y-auto">
-                <Conversations />
-            </div>
-            <div>
-                <BottomBar />
-            </div>
+const ChatRoom = ({ active,onBack }) => {
+  
+  const renderChat = () => {
+    if(active){
+      const chat = data.find(item => item.id === active)
+      return (
+        <div className="h-full w-full flex flex-col">
+          <div>
+              <TopBar title={chat.name} onBack={onBack} />
+          </div>
+          <div className="grow overflow-y-auto">
+              <Conversations />
+          </div>
+          <div>
+              <BottomBar />
+          </div>
         </div>
-    );
+      )
+    }
+    return (
+      <div className=" h-full flex items-center justify-center">
+        <span>No Chat is Selected</span>
+      </div>
+    )
+  }
+  
+  return (
+      <div className="section text-white flex flex-col">
+        {renderChat()}
+      </div>
+  );
 };
 
 export default ChatRoom;
