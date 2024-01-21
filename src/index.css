@@ -30,7 +30,7 @@ input{
   .avatar{
     @apply flex w-12 aspect-square items-center justify-center font-mono text-4xl rounded-full;
   }
-  @variants responsive {
+  @layer utilities {
     /* Hide scrollbar for Chrome, Safari, and Opera */
     .no-scrollbar::-webkit-scrollbar {
       display: none;

@@ -7,12 +7,14 @@ import { useAuthContext } from "./context/UserAuthContext";
 import Home from './pages/Home/Home'
 import Login from './pages/Login/Login'
 import Chat from './pages/Chat/Chat'
+import Loader from "./components/Loader";
 
 function App() {
   
-  const { user } = useAuthContext()
+  const { user, loading } = useAuthContext()
   
   const ProtectedRoute = () => {
+    if(loading) return <Loader />
     if(user) return <Chat />
     return <Home />
   }

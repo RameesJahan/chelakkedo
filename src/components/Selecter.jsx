@@ -1,19 +1,33 @@
-import React,{ useState, useEffect } from 'react'
+import React,{ useState, useEffect, useRef } from 'react'
 
 const Selecter = ({ className, data, onSelect, selected }) => {
   
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState('');
+  const bodyRef = useRef(null)
+  
+  
   
   useEffect(() => {
     data.sort(function(a, b){
       let x = a.name.toLowerCase();
       let y = b.name.toLowerCase();
-      if (x < y) {return -1;}
-      if (x > y) {return 1;}
+      if (x < y) return -1
+      if (x > y) return 1
       return 0;
     });
+    document.addEventListener("onmousedown",handleOutsideClick)
+    document.addEventListener("touchstart",handleOutsideClick)
+    return () => {
+      document.addEventListener("onmousedown",handleOutsideClick)
+      document.addEventListener("touchstart",handleOutsideClick)
+    }
   }, []);
+  
+  const handleOutsideClick = (e) => {
+    if(bodyRef.current && !bodyRef.current.contains(e.target))
+      setOpen(false)
+  }
   
   const onSelectHandler = ({id}) => {
     setOpen(i => !i)
@@ -22,7 +36,7 @@ const Selecter = ({ className, data, onSelect, selected }) => {
   }
   
   return (
-    <div className={ `${className} relative border ${ open?"border-fuchsia-400":"border-gray-400"}`}>
+    <div ref={bodyRef} className={ `${className} relative border ${ open?"border-fuchsia-400":"border-gray-400"}`}>
       <div className="flex justify-between"
           onClick={() => setOpen(i => !i)}
       >
