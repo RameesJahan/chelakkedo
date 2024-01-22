@@ -1,74 +1,154 @@
-import React from "react";
+import React, { useState,useMemo,useEffect } from "react";
 import { db } from "../firebase/config";
 import {
-    doc,
-    setDoc,
-    collection,
-    addDoc,
-    getDoc,
-    writeBatch,
-    updateDoc, 
-    arrayUnion,
-    query, 
-    where,
-    getDocs,
-    serverTimestamp
+  doc,
+  setDoc,
+  collection,
+  addDoc,
+  getDoc,
+  writeBatch,
+  updateDoc,
+  arrayUnion,
+  query,
+  where,
+  getDocs,
+  onSnapshot,
+  serverTimestamp
 } from "firebase/firestore";
 
-const useFirebase = () => {
+const useUser = (defaultId) => {
+  const [usr, setUsr] = useState(null);
+  const [id, setId] = useState(defaultId);
+  const [usrDoc,setUsrDoc] = useState(null)
   
-    const getUser = async id => {
-        const docRef = doc(db, "users", id);
-        const res = await getDoc(docRef);
-        if(res.exists()) return { ...res.data(), id:res.id }
-        return null
-    };
-
-    const createUser = async data => {
-        const docRef = doc(db, "users", data.id);
-        await setDoc(docRef, {
-            name: data.name,
-            phone: data.phone,
-            status: "",
-            chat_rooms: []
-        });
-        const res = await getDoc(docRef);
-        return { ...res.data(), id: res.id }
-    };
-
-    const createChat = async data => {
-        const collRef = collection(db, "chat_rooms");
-        const docFromRef = doc(db, "users", data.from);
-        const docToRef = doc(db, "users", data.to);
-        const chat_id = await addDoc(collRef, {
-            members: [data.from, data.to],
-            admin: "",
-            type: "Single",
-            unread: 0,
-            last_message: "",
-            last_seen:'',
-            created_at: serverTimestamp()
-        });
-        const batch = writeBatch(db)
-        batch.update(docFromRef,{
-          chat_rooms: arrayUnion(chat_id)
-        })
-        batch.update(docToRef,{
-          chat_rooms: arrayUnion(chat_id)
-        })
-        
-        await batch.commit()
-    };
-    
-    const getChatRooms = async id => {
-      const collRef = collection(db, "chat_rooms");
-      const q = query(collRef, where("members", "array-contains", id))
-      const docSnaps = await getDocs(q)
-      return docSnaps.map((doc) => {
-        return doc.data()
+  useEffect(() => {
+    if(id){
+      const docRef = doc(db,"users",id)
+      setUsrDoc(docRef)
+      const unSub = onSnapshot(docRef,(snap) => {
+        const newUsr = {...snap.data(),id:snap.id}
+        setUsr(newUsr)
       })
+      return () => unSub()
     }
+  }, [id]);
+  
+  const createUser = async(data) => {
+    const docRef = doc(db,"users",data.id)
+    await setDoc(docRef, {
+      name: data.name,
+      phone: data.phone,
+      status: "",
+      chat_rooms: []
+    });
+    const res = await getDoc(docRef);
+    return { ...res.data(), id: res.id }
+  }
+  
+  const getUser = async(_id) => {
+    const docRef = doc(db,"users",_id)
+    const res = await getDoc(docRef);
+    if (res.exists()) return { ...res.data(), id: res.id }
+    return null
+  }
+  
+  const updateName = async (name) => {
+    await updateDoc(usrDoc,{
+      name:name
+    })
+  }
+  
+  return { setId,usr,getUser,createUser,updateName}
+}
+
+const useChat = (id) => {
+  const [chats, setChats] = useState([]);
+  const chatColRef = collection(db, "chat_rooms");
+  
+  useEffect(() => {
+    const q = query(chatColRef, where("members", "array-contains", id));
+    const unSub = onSnapshot(q,(snaps) => {
+      const _new = []
+      snaps.forEach((d) => {
+         _new.push({...d.data(),id:d.id})
+      })
+      setChats(_new)
+    })
+    return () => unSub()
+  }, [id]);
+  
+  const createChat = async(data) => {
+    const docFromRef = doc(db, "users", data.from);
+    const docToRef = doc(db, "users", data.to);
+    const chat_id = await addDoc(chatColRef, {
+      members: [data.from, data.to],
+      admin: "",
+      type: "Single",
+      unread: 0,
+      last_message: "",
+      last_seen: "",
+      created_at: serverTimestamp()
+    });
+    const batch = writeBatch(db);
+    batch.update(docFromRef, {
+      chat_rooms: arrayUnion(chat_id)
+    });
+    batch.update(docToRef, {
+      chat_rooms: arrayUnion(chat_id)
+    });
     
-    return {getUser,createUser,createChat}
-};
-export default useFirebase
+    await batch.commit();
+  }
+  return {chats ,createChat}
+}
+
+const useOther = () => {
+  const getOther = async ph => {
+    const colRef = collection(db,"users")
+    const q = query(colRef,where("phone","==",ph))
+    const _docs = await getDocs(q)
+    const _new = []
+    _docs.forEach(_doc => {
+      _new.push({..._doc.data(),id:_doc.id})
+    })
+    if(_new.length>0) return _new[0]
+    return null
+  }
+  return getOther
+}
+
+const useMessage = (id) => {
+  const [messages, setMessages] = useState('');
+  
+  const msgColRef = collection(db,`chat_rooms/${id}/messages`)
+  
+  useEffect(() => {
+    const unSub = onSnapshot(msgColRef,(snap) => {
+      const newMsgs = snap.docs.map((d) => {
+        return {...d.data(),id:d.id}
+      })
+      setMessages(newMsgs)
+    })
+    return () => unSub()
+  }, [id]);
+  
+  const sendMessage = async() => {
+    const msgId = await addDoc(msgColRef, {
+      from: data.from,
+      to: data.to,
+      message: data.message,
+      status: "sended",
+      time: serverTimestamp()
+    });
+
+    const chatRef = doc(db, "chat_rooms", id);
+    await updateDoc(chatRef, {
+      last_message: data.message,
+      last_seen: serverTimestamp()
+    });
+  }
+  return {messages,sendMessage}
+}
+
+export {useUser,useMessage,useChat,useOther}
+

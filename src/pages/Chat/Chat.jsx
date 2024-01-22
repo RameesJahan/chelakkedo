@@ -8,6 +8,8 @@ import { ChatContextProvider } from '../../context/ChatContex'
 const Chat = () => {
   const [activeChat, setActiveChat] = useState(null);
   
+  
+  
   return (
     <ChatContextProvider>
       <main className="w-full h-full p-3 bg-neutral-950 flex flex-nowrap gap-1">
