@@ -16,6 +16,16 @@ const Home = () => {
         <Link to="/login">
           <div className="px-4 py-2 mt-5 font-bold text-xl rounded-full rounded-bl-none bg-fuchsia-400 hover:bg-fuchsia-800 text-black">Start Chat</div>
         </Link>
+        <div className="rounded-3xl border border-fuchsia-700 p-8 mt-8 text-center text-white">
+          Report Bug 🐞: <a className="text-fuchsia-600 underline" href="https://github.com/RameesJahan/chelakkedo">GitHub</a>
+        </div>
+        <div className="rounded-3xl border border-fuchsia-700 p-8 mt-8">
+          <p className="text-white">
+            * This is a demonstration application created for educational purposes. It does not have the security features of a production-ready chat application. <br />
+            * Do not send sensitive information through this app, as it is not encrypted. <br />
+            * Use responsibly: Be respectful of other users and avoid sending offensive content.
+          </p>
+        </div>
       </div>
     </div>
   )
