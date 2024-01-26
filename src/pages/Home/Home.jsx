@@ -6,7 +6,9 @@ const Home = () => {
       <div className="topbar w-full">
         <div className="container-md flex justify-between p-1">
           <h3 className="logo self-center">Chelakkedo</h3>
-          <div className="btn-abt border border-fuchsia-400 px-4 py-2 font-bold text-xl rounded-full rounded-bl-none text-fuchsia-400 hover:bg-fuchsia-400 hover:text-white">About</div>
+          <a href="https://github.com/RameesJahan/chelakkedo">
+            <div className="btn-abt border border-fuchsia-400 px-4 py-2 font-bold text-xl rounded-full rounded-bl-none text-fuchsia-400 hover:bg-fuchsia-400 hover:text-white">About</div>
+          </a>
         </div>
       </div>
       <div className="container-sm w-full h-full flex flex-col justify-center items-center">

@@ -25,7 +25,7 @@ const VerifyNumberUI = ({onEdit, onVerify}) => {
           >
           Verify OTP
         </div>
-        <span className="text-sm mt-1">Didn't get OTP?<span className="text-blue-500" > Resend</span> </span>
+        {/*<span className="text-sm mt-1">Didn't get OTP?<span className="text-blue-500" > Resend</span> </span>*/}
       </div>
     )
 }
