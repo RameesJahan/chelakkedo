@@ -2,6 +2,7 @@ import './App.css'
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import { useAuthContext } from "./context/UserAuthContext";
+import { ChatContextProvider } from './context/ChatContex'
 
 
 import Home from './pages/Home/Home'
@@ -11,11 +12,19 @@ import Loader from "./components/Loader";
 
 function App() {
   
-  const { user, loading } = useAuthContext()
+  const { currentUser, loading } = useAuthContext()
+  
+  const WrappedChat = () => {
+    return (
+      <ChatContextProvider>
+        <Chat />
+      </ChatContextProvider>
+    )
+  }
   
   const ProtectedRoute = () => {
     if(loading) return <Loader />
-    if(user) return <Chat />
+    if(currentUser) return <WrappedChat />
     return <Home />
   }
 

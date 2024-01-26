@@ -11,9 +11,11 @@ import {
   arrayUnion,
   query,
   where,
+  orderBy,
   getDocs,
   onSnapshot,
-  serverTimestamp
+  serverTimestamp,
+  increment
 } from "firebase/firestore";
 
 const useUser = (defaultId) => {
@@ -63,30 +65,49 @@ const useUser = (defaultId) => {
 
 const useChat = (id) => {
   const [chats, setChats] = useState([]);
+  const [loading, setLoading] = useState(true);
   const chatColRef = collection(db, "chat_rooms");
   
+  const handleError = (error) => {
+    setLoading(false)
+    console.log(error)
+  }
+  
   useEffect(() => {
-    const q = query(chatColRef, where("members", "array-contains", id));
+    const q = query(chatColRef,orderBy("last_seen","desc"), where("members", "array-contains", id));
     const unSub = onSnapshot(q,(snaps) => {
       const _new = []
       snaps.forEach((d) => {
-         _new.push({...d.data(),id:d.id})
+         _new.push({
+           ...d.data(),
+           id:d.id
+         })
       })
       setChats(_new)
-    })
+      
+      setLoading(false)
+    },handleError)
     return () => unSub()
   }, [id]);
   
   const createChat = async(data) => {
-    const docFromRef = doc(db, "users", data.from);
-    const docToRef = doc(db, "users", data.to);
+    const docFromRef = doc(db, "users", data.from.id);
+    const docToRef = doc(db, "users", data.to.id);
+   
     const chat_id = await addDoc(chatColRef, {
-      members: [data.from, data.to],
+      members: [data.from.id, data.to.id],
+      name: {
+        [data.from.id]: data.to.name,
+        [data.to.id]: data.from.name
+      },
       admin: "",
       type: "Single",
-      unread: 0,
+      unread: {
+        [data.from.id]:0,
+        [data.to.id]:0
+      },
       last_message: "",
-      last_seen: "",
+      last_seen: serverTimestamp(),
       created_at: serverTimestamp()
     });
     const batch = writeBatch(db);
@@ -99,7 +120,7 @@ const useChat = (id) => {
     
     await batch.commit();
   }
-  return {chats ,createChat}
+  return {chats ,createChat ,loading}
 }
 
 const useOther = () => {
@@ -118,21 +139,26 @@ const useOther = () => {
 }
 
 const useMessage = (id) => {
-  const [messages, setMessages] = useState('');
+  const [messages, setMessages] = useState([]);
   
   const msgColRef = collection(db,`chat_rooms/${id}/messages`)
+  const q = query(msgColRef,orderBy("time","desc"))
   
   useEffect(() => {
-    const unSub = onSnapshot(msgColRef,(snap) => {
+    const unSub = onSnapshot(q,(snap) => {
       const newMsgs = snap.docs.map((d) => {
-        return {...d.data(),id:d.id}
+        return {
+          ...d.data(),
+          id:d.id,
+          send_time: d.data().time.seconds*1000 // changing firebase serverTimestamp to normal timestamp 
+        }
       })
       setMessages(newMsgs)
     })
     return () => unSub()
   }, [id]);
   
-  const sendMessage = async() => {
+  const sendMessage = async(data) => {
     const msgId = await addDoc(msgColRef, {
       from: data.from,
       to: data.to,
@@ -144,11 +170,23 @@ const useMessage = (id) => {
     const chatRef = doc(db, "chat_rooms", id);
     await updateDoc(chatRef, {
       last_message: data.message,
-      last_seen: serverTimestamp()
+      last_seen: serverTimestamp(),
+      [`unread.${data.to}`]: increment(1)
     });
   }
   return {messages,sendMessage}
 }
 
-export {useUser,useMessage,useChat,useOther}
+const useRead = () => {
+  const setRead = async(id,userId) => {
+    const docRef = doc(db,"chat_rooms", id)
+    await updateDoc(docRef,{
+      [`unread.${userId}`]: 0
+    })
+  }
+  
+  return { setRead }
+}
+
+export {useUser,useMessage,useChat,useOther,useRead}
 

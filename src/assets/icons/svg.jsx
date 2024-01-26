@@ -1,4 +1,4 @@
-const ImgSend = () => {
+const IconSend = () => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -17,7 +17,7 @@ const ImgSend = () => {
   );
 };
 
-const ImgArrowLeft = () => {
+const IconArrowLeft = () => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -93,4 +93,4 @@ const IconCross = ({ className }) => {
   );
 };
 
-export { ImgSend, ImgArrowLeft, IconSearch, IconCheck, IconCross };
+export { IconSend, IconArrowLeft, IconSearch, IconCheck, IconCross };

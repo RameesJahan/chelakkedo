@@ -1,44 +1,43 @@
 import React,{ createContext, useContext, useState, useEffect } from 'react'
-import { onAuthStateChanged } from "firebase/auth";
 
-import { auth } from "../firebase/config";
-import { useUser } from "../hooks/useFirebase";
-
-import Loader from "../components/Loader";
+import { useAuthContext } from "../context/UserAuthContext";
+import { useUser,useChat } from "../hooks/useFirebase";
 
 const ChatContext = createContext()
 
 export const ChatContextProvider = ({children}) => {
-  const [currentUser, setCurrentUser] = useState(null);
-  //const { getUser,createUser,liveUpdateUser } = useFirebase()
-  const { setId,usr,getUser,createUser } = useUser(currentUser?.id)
   
+  const [ myChats, setMyChats] = useState([]);
+  const [active, setActive] = useState(null);
+  const { currentUser } = useAuthContext()
+  const { chats, loading } = useChat(currentUser.id)
+  const { getUser } = useUser(currentUser.id)
   
   useEffect(() => {
-    const unSubAuth = onAuthStateChanged(auth,async(user) => {
-      if(user){
-        setId(user.uid)
-        const _u = await getUser(user.uid)
-        if(_u){
-          setCurrentUser(_u)
-        }else{
-          const newU = await createUser({
-            id:user.uid,
-            name:"User",
-            phone: user.phoneNumber
-          })
-          console.log(usr)
-          setCurrentUser(newU)
+    const fetchData = async () => {
+      const _new = await Promise.all(chats.map(async chat => {
+        const _m = chat.members
+        const _other = _m.filter(_i => {
+          return _i !== currentUser.id
+        })[0]
+        
+        //const _u = await getUser(_other)
+        return {
+          ...chat,
+          name: chat.name[currentUser.id],
+          otherId:_other,
+          last:chat.last_seen.seconds*1000  // changing firebase serverTimestamp to normal timestamp 
         }
-      }
-    })
-  }, []);
+      }))
+      setMyChats(_new)
+    }
+    fetchData()
+  }, [chats]);
   
-  if(!currentUser) return <Loader />
   
   return (
     <ChatContext.Provider 
-      value={{ currentUser, setCurrentUser}}
+      value={{ myChats,active,setActive,loading }}
     >
       {children}
     </ChatContext.Provider>  

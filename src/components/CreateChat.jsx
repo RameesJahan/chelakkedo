@@ -1,21 +1,24 @@
 import React,{ useState } from 'react'
 import { useOther, useChat } from "../hooks/useFirebase";
 import { useChatContext } from "../context/ChatContex";
+import { useAuthContext } from "../context/UserAuthContext";
 
 import Loader from "./Loader";
 
-import { ImgArrowLeft, IconSearch } from "../assets/icons/svg";
+import { IconArrowLeft, IconSearch } from "../assets/icons/svg";
 
 const CreateChat = ({onBack}) => {
   const [loading, setLoading] = useState(false);
   const [phone, setPhone] = useState('');
   const [other, setOther] = useState(null);
-  const { currentUser } = useChatContext()
+  const { currentUser } = useAuthContext()
+  const { myChats,setActive } = useChatContext()
   const { createChat } = useChat(currentUser.id)
   const getOther = useOther()
   
   const handleSubmit = async() => {
     setLoading(true)
+    
     try{
       const _other = await getOther(phone)
       setOther(_other)
@@ -26,19 +29,29 @@ const CreateChat = ({onBack}) => {
     }
   }
   
+  const isChatExist = (_other) =>{
+    return myChats.some((_chat) => _chat.members.includes(_other.id))
+  }
+  
   const handleCreate = async() => {
     setLoading(true)
-    try{
-      await createChat({
-        from:currentUser.id,
-        to:other.id
-      })
+    if(isChatExist(other)){
+      setActive(other.id)
       onBack()
-    }catch(error){
-      console.log(error)
-    }finally{
-      setLoading(false)
+    }else{
+      try{
+        await createChat({
+          from:currentUser,
+          to:other
+        })
+        onBack()
+      }catch(error){
+        console.log(error)
+      }finally{
+        setLoading(false)
+      }
     }
+    
   }
   
   const renderResult = () => {
@@ -60,7 +73,7 @@ const CreateChat = ({onBack}) => {
     <div className="absolute p-2 top-0 left-0 w-full h-full bg-slate-900 text-white">
       <div className="w-full flex gap-2 items-center">
         <div onClick={onBack} className="hover:text-fuchsia-700">
-          <ImgArrowLeft />
+          <IconArrowLeft />
         </div>
         <div className="grow">
           <input 

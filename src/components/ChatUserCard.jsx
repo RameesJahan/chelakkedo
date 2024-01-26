@@ -1,20 +1,18 @@
-import React,{ useState, useEffect } from 'react'
+import React,{ useState, useEffect, useMemo } from 'react'
 
-const colors = [ 
-    "bg-rose-600","bg-blue-600","bg-stone-600","bg-red-600","bg-orange-600","bg-amber-600",
-    "bg-yellow-600","bg-lime-600","bg-green-600","bg-emerald-600","bg-teal-600","bg-cyan-600",
-    "bg-sky-600","bg-blue-600","bg-indigo-600","bg-violet-600","bg-purple-600","bg-pink-600"
-  ]
+import useTime from "../hooks/useTime";
+import useColor from "../hooks/useColor";
 
-const ChatUserCard = ({user, onClick, active }) => {
+import { useAuthContext } from "../context/UserAuthContext";
+
+const ChatUserCard = ({chat, onClick, active }) => {
   
-  const [color, setColor] = useState('');
+  const { getDate, getTime } = useTime();
+  const { currentUser } = useAuthContext()
+  const { color } = useColor(chat.id)
   
-  useEffect(() => {
-    setColor(() => colors[Math.floor(Math.random()*colors.length)])
-    
-  }, []);
   
+  const last_string=getDate(chat.last)
   
   return (
     <div 
@@ -22,15 +20,21 @@ const ChatUserCard = ({user, onClick, active }) => {
       onClick={onClick}
       >
       <div className="flex-none">
-        <div className={`avatar ${color}`}>{user.name.toUpperCase()[0]}</div>
+        <div className={`avatar ${color}`}>{chat.name.toUpperCase()[0]}</div>
       </div>
       <div className="grow overflow-x-hidden" >
-        <h4 className="font-bold" >{user.name}</h4>
-        <p className="text-sm text-gray-400 overflow-hidden whitespace-nowrap text-ellipsis" >{user.last}</p>
+        <h4 className="font-bold" >{chat.name}</h4>
+        <p className="text-sm text-gray-400 overflow-hidden whitespace-nowrap text-ellipsis" >{chat.last_message}</p>
       </div>
       <div className="flex-none">
-        <p className="text-sm text-gray-400">{user.seen}</p>
+        <p className="text-sm text-gray-400">{last_string}</p>
       </div>
+      {
+        chat.unread[currentUser.id] > 0 &&
+          <div className="text-md bg-fuchsia-700 rounded-full grid place-items-center w-6 h-6">
+            {chat.unread[currentUser.id]}
+          </div>
+      }
     </div>
   )
 }

@@ -13,9 +13,8 @@ const UserProfile = () => {
   const [isEdit, setIsEdit] = useState(false);
   const bodyRef = useRef(null)
   
-  const { logOut } = useAuthContext()
-  const { currentUser,setCurrentUser } = useChatContext()
-  const { usr,updateName } = useUser(currentUser.id)
+  const { currentUser,logOut } = useAuthContext()
+  const { updateName } = useUser(currentUser.id)
   
   const handleOutsideClick = (e) => {
     if(bodyRef.current && !bodyRef.current.contains(e.target))
@@ -34,9 +33,6 @@ const UserProfile = () => {
     }
   }, [])
   
-  useEffect(() => {
-    if(usr) setCurrentUser(usr)
-  }, [usr]);
   
   const handleKeyDown = (e) => {
     if(e.key=="Enter"){
@@ -68,6 +64,11 @@ const UserProfile = () => {
     setNewName('')
   }
   
+  const handleSignOut = async() => {
+    await logOut()
+    window.location.reload()
+  }
+  
   return (
     <div className="relative" ref={bodyRef}>
       <div onClick={() => setActive(v => !v)} className="avatar bg-rose-500 w-10 text-3xl text-white">{currentUser?.name.toUpperCase()[0]}</div>
@@ -91,7 +92,7 @@ const UserProfile = () => {
             </div>
           }
           <div onClick={handleEdit} className="w-full mt-1 p-1 text-center shadow rounded border border-fuchsia-700">{isEdit?"Save":"Edit Name"}</div>
-          <div onClick={logOut} className="w-full mt-1 p-1 text-center shadow rounded bg-red-700">Sign Out</div>
+          <div onClick={handleSignOut} className="w-full mt-1 p-1 text-center shadow rounded bg-red-700">Sign Out</div>
         </div>
       }
     </div>

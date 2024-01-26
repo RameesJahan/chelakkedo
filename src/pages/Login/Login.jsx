@@ -7,7 +7,7 @@ import VerifyNumberUI from "../../components/VerifyNumberUI";
 import ErrorBox from "../../components/ErrorBox";
 import Loader from "../../components/Loader";
 
-import {useAuthContext} from "../../context/UserAuthContext";
+import { useAuthContext } from "../../context/UserAuthContext";
 
 import IMG_SUCCESS from "../../assets/images/success.png";
 
