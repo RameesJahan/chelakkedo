@@ -3,6 +3,10 @@
 
 This is a simple chat application built with Vite.js, React, Tailwind CSS, and Firebase. It allows users to chat in real-time and displays unread message counts.
 
+**Preview**
+
+### [Click Here](https://rameesjahan.me/chelakkedo/) to use live app.
+
 **Features:**
 
 * **Real-time chat:** Send and receive messages instantly.
