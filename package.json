@@ -2,7 +2,7 @@
   "name": "chelakkedo",
   "private": true,
   "version": "1.0.0",
-  "homepage": "https://rameesjahan.github.io/chelakkedo/",
+  "homepage": "https://rameesjahan.me/chelakkedo/",
   "type": "module",
   "scripts": {
     "predeploy" : "npm run build",
