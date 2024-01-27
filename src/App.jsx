@@ -8,6 +8,7 @@ import { ChatContextProvider } from './context/ChatContex'
 import Home from './pages/Home/Home'
 import Login from './pages/Login/Login'
 import Chat from './pages/Chat/Chat'
+import NotFound from './pages/NotFound/NotFound'
 import Loader from "./components/Loader";
 
 function App() {
@@ -33,6 +34,7 @@ function App() {
       <Routes>
         <Route path="/" element={<ProtectedRoute />} />
         <Route path="/login" element={<Login />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
   )
