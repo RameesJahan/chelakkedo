@@ -30,11 +30,13 @@ function App() {
   }
 
   return (
-    <BrowserRouter>
+    <BrowserRouter
+      basename="/chelakkedo/"
+    >
       <Routes>
         <Route path="/" element={<ProtectedRoute />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/*" element={<NotFound />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
   )
