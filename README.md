@@ -5,7 +5,7 @@ This is a simple chat application built with Vite.js, React, Tailwind CSS, and F
 
 **Preview**
 
-### [Click Here](https://rameesjahan.me/chelakkedo/) to use live app.
+### [Click Here](https://rameesjahan.github.io/chelakkedo/) to use live app.
 
 **Features:**
 
