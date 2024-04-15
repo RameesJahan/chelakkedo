@@ -1,5 +1,5 @@
 # Chelakkedo
-## Simple Chat App with Vite.js
+## Simple Chat App with ReactJS
 
 This is a simple chat application built with Vite.js, React, Tailwind CSS, and Firebase. It allows users to chat in real-time and displays unread message counts.
 
