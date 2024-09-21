@@ -33,7 +33,7 @@ This is a simple chat application built with Vite.js, React, Tailwind CSS, and F
 4. Start the development server: `npm run dev`
 5. Open http://localhost:3000 in your browser.
 
-**Test**
+**Test:**
 
 You can use these fake numbers to fake login in [live preview](https://rameesjahan.github.io/chelakkedo/).
 
