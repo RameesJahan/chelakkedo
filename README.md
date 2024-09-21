@@ -33,6 +33,16 @@ This is a simple chat application built with Vite.js, React, Tailwind CSS, and F
 4. Start the development server: `npm run dev`
 5. Open http://localhost:3000 in your browser.
 
+**Test**
+
+You can use these fake numbers to fake login.
+
+| Numbers        | OTP           |
+| -------------- |:-------------:| 
+| +911212121212  | 567890        |
+| +912222244444  | 234567        | 
+| +919999900000  | 888888        |
+
 **Contributing:**
 
 Pull requests and suggestions are welcome! Please make sure your code follows the project's coding style guide.
